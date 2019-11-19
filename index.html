@@ -1,0 +1,293 @@
+<html>
+    <head>
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/LightController.js"></script>
+        <style>
+            #colorPicker {
+                display:flex;
+                width: 960px;
+                flex-wrap: wrap;
+            }
+            #colorPicker div {
+                width: 10px;
+                height:10px;
+            }
+            
+        </style>
+        <script>
+
+            const rainbow = [
+                "#ff0000",
+                "#ff9100",
+                "#ffff00",
+                "#00ff00",
+                "#0000ff",
+                "#fd00ff",
+                "#9000ff"
+            ];
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const canvas = document.getElementById("canvas");
+
+                const controller = new LightController(canvas);
+                var idx = 0;
+                var frames = [];
+                for (var x = 0; x < 1; x++) {
+                    for (var s = 0; s < 1; s++) {
+                        let lights = [];
+                        for (var i = 0; i < 50; i++) {
+
+                            const b = new Bulb(i, i*18, 0);
+                            b.setHexColor('#000000');
+                            lights.push(b);
+                        }
+                        const lightString = new LightString(lights);
+                        frames.push(new LightProgramFrame([lightString]));
+                    }
+                }
+                let copiedFrame = null;
+                const myProgram = new LightProgram(frames, 300);
+                controller.program = myProgram;
+                controller.runProgram();
+
+                $('.load-program').click(() => {
+                    let data = $('#json-data').val();
+                    controller.loadProgram(data);
+                });
+                $('.get-program').click(() => {
+                    let data = controller.getProgram();
+                    $('#json-data').val(data);
+                });
+                $('.copy-frame').click(() => {
+                    copiedFrame = controller.getFrameData();
+                });
+                $('.paste-frame').click(() => {
+                    if (!copiedFrame) return;
+                    controller.pasteFrameData(copiedFrame);
+                });
+                $('.scroll-frame').click(() => {
+                    controller.scrollFrame();
+                });
+                $('.lock-positions').click(() => {
+                    controller.positionLocked = !controller.positionLocked;
+                    $('.lock-positions').text(controller.positionLocked ? 'Unlock Positions' : 'Lock Positions');
+                });
+
+                $('.toggle-frame-play').click(() => {
+                    controller.play = !controller.play;
+                    $('.toggle-frame-play').text(controller.play ? "||" : "Go");
+                });
+
+                $('.move-frame').click( (e) => {
+                    let i = $(e.currentTarget).data('index');
+                    controller.moveProgramFrameNumber(i);
+                });
+                $('.insert-frame').click( (e) => {
+                    controller.insertFrame();
+                });
+
+                $('.clear-selected-bulb').click( () => {
+                    controller.selectedItem = {};
+                });
+
+                $('.toggle-show-bulb-text').click( () => {
+                    controller.showBulbText = !controller.showBulbText;
+                });
+
+                $('.toggle-show-grid').click( () => {
+                    controller.showGrid = !controller.showGrid;
+                });
+
+
+                let picker = document.getElementById("colorPicker");
+                $('body').on('mouseenter', '.swatch', (e) => {
+                    let color = e.currentTarget.style.backgroundColor;
+                    m = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+                    if(m) {
+                        let red = Math.floor(m[1]/16);
+                        let green = Math.floor(m[2]/16);
+                        let blue = Math.floor(m[3]/16);
+                        //console.log(red, green, blue);
+                        controller.updateSelectedBulbColor({red: red, green: green, blue: blue});
+                    }
+                });
+                $('body').on('click', '.swatch', (e) => {
+                    controller.selectedItem = {};
+                });
+
+                let bulb = new Bulb(0, 0, 0);
+                    for (let green = 0; green < 16; green++) {
+                        let blue = green;
+                        let red = 16;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let red = 16; red > 0; red--) {
+                        let blue = red;
+                        let green = 16;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let blue = 0; blue < 16; blue++) {
+                        let red = blue;
+                        let green = 16;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let green = 16; green > 0; green--) {
+                        let red = green;
+                        let blue = 16;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let red = 0; red < 16; red++) {
+                        let green = red;
+                        let blue = 16;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let blue = 16; blue > 0; blue--) {
+                        let green = blue;
+                        let red = 16;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                for (let dim = 0; dim < 16; dim++) {
+                    for (let green = 0; green < 16; green++) {
+                        let blue = 0;
+                        let red = 16-dim;
+                        bulb.red = red;
+                        bulb.green = green-dim;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let red = 15; red >= 0; red--) {
+                        let blue = 0;
+                        let green = 16-dim;
+                        bulb.red = red-dim;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let blue = 0; blue < 16; blue++) {
+                        let red = 0;
+                        let green = 16-dim;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue-dim;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let green = 15; green >= 0; green--) {
+                        let red = 0;
+                        let blue = 16-dim;
+                        bulb.red = red;
+                        bulb.green = green-dim;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let red = 0; red < 16; red++) {
+                        let green = 0;
+                        let blue = 16-dim;
+                        bulb.red = red-dim;
+                        bulb.green = green;
+                        bulb.blue = blue;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                    for (let blue = 15; blue >= 0; blue--) {
+                        let green = 0;
+                        let red = 16-dim;
+                        bulb.red = red;
+                        bulb.green = green;
+                        bulb.blue = blue-dim;
+                        let color = bulb.getHexColor();
+                        let d = document.createElement("div");
+                        d.className = 'swatch';
+                        d.style.backgroundColor = color;
+                        picker.appendChild(d);
+                    }
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <canvas id="canvas" width="1000" height="500"></canvas>
+        <br>Current Frame: <span class="frameNumber"></span>
+        <span class="selectedBulbInfo"></span>
+        <br>
+        <button class="move-frame" data-index="-1">&lt;</button>
+        <button class="toggle-frame-play">||</button>
+        <button class="move-frame" data-index="1">&gt;</button>
+        <button class="insert-frame">+</button>
+        <button class="clear-selected-bulb">&times;</button>
+        <button class="toggle-show-bulb-text">Bulb text</button>
+        <button class="toggle-show-grid">Grid</button>
+        <button class="copy-frame">Copy Frame</button>
+        <button class="paste-frame">Paste Frame</button>
+        <button class="scroll-frame">Scroll Frame</button>
+        <button class="lock-positions">Lock Positions</button>
+        <div id="colorPicker">
+        </div>
+        <textarea id="json-data" style="width:600px;height:200px;"></textarea>
+        <button class="load-program">Load Program</button>
+        <button class="get-program">Get Program</button>
+    </body>
+</html>
