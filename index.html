@@ -35,6 +35,7 @@
                 const controller = new LightController(canvas);
                 var idx = 0;
                 var frames = [];
+                /*
                 for (var x = 0; x < 1; x++) {
                     for (var s = 0; s < 1; s++) {
                         let lights = [];
@@ -49,9 +50,15 @@
                     }
                 }
                 let copiedFrame = null;
+                */
                 const myProgram = new LightProgram(frames, 300);
                 controller.program = myProgram;
                 controller.runProgram();
+
+                $('.update-delay').click(() => {
+                    let newDelay = $('#frameDelay').val();
+                    controller.program.delay = newDelay;
+                });
 
                 $('.load-program').click(() => {
                     let data = $('#json-data').val();
@@ -60,6 +67,12 @@
                 $('.get-program').click(() => {
                     let data = controller.getProgram();
                     $('#json-data').val(data);
+                });
+                $('.add-light-string').click(() => {
+                    controller.addLightString();
+                });
+                $('.delete-frame').click(() => {
+                    copiedFrame = controller.deleteFrame();
                 });
                 $('.copy-frame').click(() => {
                     copiedFrame = controller.getFrameData();
@@ -70,6 +83,9 @@
                 });
                 $('.scroll-frame').click(() => {
                     controller.scrollFrame();
+                });
+                $('.scroll-frames').click(() => {
+                    controller.scrollFrames();
                 });
                 $('.lock-positions').click(() => {
                     controller.positionLocked = !controller.positionLocked;
@@ -273,6 +289,10 @@
         <br>Current Frame: <span class="frameNumber"></span>
         <span class="selectedBulbInfo"></span>
         <br>
+        Frame Delay: <input type="text" id="frameDelay"/><button class="update-delay">Set</button>
+        <br>
+        <button class="add-light-string">Add new light string</button>
+        <br>
         <button class="move-frame" data-index="-1">&lt;</button>
         <button class="toggle-frame-play">||</button>
         <button class="move-frame" data-index="1">&gt;</button>
@@ -280,9 +300,11 @@
         <button class="clear-selected-bulb">&times;</button>
         <button class="toggle-show-bulb-text">Bulb text</button>
         <button class="toggle-show-grid">Grid</button>
+        <button class="delete-frame">Delete Frame</button>
         <button class="copy-frame">Copy Frame</button>
         <button class="paste-frame">Paste Frame</button>
         <button class="scroll-frame">Scroll Frame</button>
+        <button class="scroll-frames">Scroll ALL Frames</button>
         <button class="lock-positions">Lock Positions</button>
         <div id="colorPicker">
         </div>

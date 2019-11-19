@@ -206,6 +206,58 @@ class LightController {
         this.program.frames.splice(this.frameNumber+1, 0, newFrame);
     }
 
+    deleteFrame() {
+        this.program.frames.splice(this.frameNumber, 1);
+    }
+
+    scrollFrames() {
+        let startFrame = this.program.getFrame(this.frameNumber);
+        let lightStrings = [];
+        const totalFrames = startFrame.lightStrings[0].bulbs.length;
+        for (let x = 1; x < totalFrames; x++) {
+            this.insertFrame();
+            this.frameNumber++;
+            this.scrollFrame();
+        }
+    }
+
+    addLightString() {
+        let lightCount = prompt("Number of lights", "50");
+        if (lightCount > 0 && lightCount <= 50) {
+            for (var s = 0; s < 1; s++) {
+                //add to all frames
+                if (this.program.frames.length <= 0) {
+                    let lights = [];
+                    for (var i = 0; i < lightCount; i++) {
+
+                        const b = new Bulb(i, i*18, 0);
+                        b.setHexColor('#000000');
+                        lights.push(b);
+                    }
+                    const lightString = new LightString(lights);
+                    console.log("no frames");
+                    const myProgram = new LightProgram([new LightProgramFrame([lightString])], 100);
+                    this.program = myProgram;
+                    this.runProgram();
+                }
+                for (let f = 0; f < this.program.frames.length; f++) {
+                    let frame = this.program.frames[f];
+                    let lights = [];
+                    for (var i = 0; i < lightCount; i++) {
+
+                        const b = new Bulb(i, i*18, 0);
+                        b.setHexColor('#000000');
+                        lights.push(b);
+                    }
+                    let lightString = new LightString(lights);
+                    let lightStrings = frame.lightStrings.concat(lightString);
+                    let newFrame = new LightProgramFrame(lightStrings);
+                    this.program.frames.splice(f, 1, newFrame);
+                }
+            }
+        }
+    }
+
     scrollFrame() {
         let frame = this.program.getFrame(this.frameNumber);
         let lightStrings = [];
@@ -285,42 +337,47 @@ class LightController {
     runProgram() {
         let runLoop = () => {
     //        console.log(this.program.frames);
+            try {
             if (this.ctx) {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 $('.frameNumber').text(this.frameNumber);
-                for (let stringIdx = 0; stringIdx < this.program.getFrame(this.frameNumber).lightStrings.length; stringIdx++) {
-                    let string = this.program.getFrame(this.frameNumber).lightStrings[stringIdx];
-                    for (let bulb of string.bulbs) {
-                        if (this.showGrid && this.gridImage) {
-                            this.ctx.drawImage(this.gridImage, 0, 0);
-                        }
-                        this.ctx.beginPath();
-                        this.ctx.arc(bulb.posX+(this.bulbRadius)+this.bulbLineWidth,
-                            bulb.posY+(this.bulbRadius)+this.bulbLineWidth, 
-                            this.bulbRadius,
-                            0, 2*Math.PI, false);
-                        this.ctx.lineWidth = this.bulbLineWidth;
-                        if (this.selectedItem && this.selectedItem.element && 
-                            bulb.address == this.selectedItem.element.bulb.address &&
-                            stringIdx == this.selectedItem.element.stringIdx) {
-                            this.ctx.strokeStyle = "#FF0000";
-                        } else {
-                            this.ctx.strokeStyle = '#000000';
-                        }
-                        this.ctx.stroke();
-                        this.ctx.fillStyle = bulb.getHexColor();
-                        this.ctx.fill();
-
-                        if (this.showBulbText) {
+                if (this.program.frames && this.program.frames.length >= this.frameNumber 
+                    && this.program.getFrame(this.frameNumber) && 
+                    this.program.getFrame(this.frameNumber).lightStrings) {
+                    for (let stringIdx = 0; stringIdx < this.program.getFrame(this.frameNumber).lightStrings.length; stringIdx++) {
+                        let string = this.program.getFrame(this.frameNumber).lightStrings[stringIdx];
+                        for (let bulb of string.bulbs) {
+                            if (this.showGrid && this.gridImage) {
+                                this.ctx.drawImage(this.gridImage, 0, 0);
+                            }
                             this.ctx.beginPath();
-                            this.ctx.fillStyle = 'white';
-                            this.ctx.textAlign = 'center';
-                            this.ctx.font = '12pt Impact';
-                            this.ctx.lineWidth = 0.25;
-                            this.ctx.strokeStyle = '#000000';
-                            this.ctx.fillText(bulb.address, bulb.posX+this.bulbRadius+this.bulbLineWidth, bulb.posY + this.bulbRadius + this.bulbLineWidth+6);
-                            this.ctx.strokeText(bulb.address, bulb.posX+this.bulbRadius+this.bulbLineWidth, bulb.posY + this.bulbRadius + this.bulbLineWidth+6);
+                            this.ctx.arc(bulb.posX+(this.bulbRadius)+this.bulbLineWidth,
+                                bulb.posY+(this.bulbRadius)+this.bulbLineWidth, 
+                                this.bulbRadius,
+                                0, 2*Math.PI, false);
+                            this.ctx.lineWidth = this.bulbLineWidth;
+                            if (this.selectedItem && this.selectedItem.element && 
+                                bulb.address == this.selectedItem.element.bulb.address &&
+                                stringIdx == this.selectedItem.element.stringIdx) {
+                                this.ctx.strokeStyle = "#FF0000";
+                            } else {
+                                this.ctx.strokeStyle = '#000000';
+                            }
+                            this.ctx.stroke();
+                            this.ctx.fillStyle = bulb.getHexColor();
                             this.ctx.fill();
+
+                            if (this.showBulbText) {
+                                this.ctx.beginPath();
+                                this.ctx.fillStyle = 'white';
+                                this.ctx.textAlign = 'center';
+                                this.ctx.font = '12pt Impact';
+                                this.ctx.lineWidth = 0.25;
+                                this.ctx.strokeStyle = '#000000';
+                                this.ctx.fillText(bulb.address, bulb.posX+this.bulbRadius+this.bulbLineWidth, bulb.posY + this.bulbRadius + this.bulbLineWidth+6);
+                                this.ctx.strokeText(bulb.address, bulb.posX+this.bulbRadius+this.bulbLineWidth, bulb.posY + this.bulbRadius + this.bulbLineWidth+6);
+                                this.ctx.fill();
+                            }
                         }
                     }
                 }
@@ -328,6 +385,9 @@ class LightController {
                     this.frameNumber++;
                 }
                 if (this.frameNumber >= this.program.frames.length) { this.frameNumber = 0; }
+            }
+            } catch (e) {
+                console.log(e);
             }
      //       console.log(this.selectedItem);
             if (this.selectedItem && this.selectedItem.element) {
