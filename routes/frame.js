@@ -1,13 +1,19 @@
 var express = require('express');
 var router = express.Router();
 const sleep = require('sleep');
-const Gpio = require('onoff').Gpio;
-const pin13 = new Gpio(13, 'out');
+const rpio = require('rpio');
+const proc = require('process');
 
 /* GET home page. */
 router.post('/', (req, res, next) => {
     //console.log("Got frame data", req.body);
-    let g = new G35String(pin13, 36);
+    const start = process.hrtime.bigint();
+    rpio.usleep(100);
+    const end = process.hrtime.bigint();
+    rpio.usleep(100);
+    const.end2 = process.hrtime.bigint();
+    console.log("Delay1: ", end-start, "Delay2: ", end2-end);
+    let g = new G35String(13, 36);
     g.set_color(0, 0xcc, g.COLOR_RED);
     res.send(200);
 });
@@ -19,34 +25,45 @@ function G35String(_pin, _light_count) {
     this.DELAYEND = 40;
     this.pin = _pin;
     this.light_count = _light_count;
+    rpio.open(_pin, 'rpio.OUTPUT', rpio.LOW);
 
     this.COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
 
     this.ZERO = function(x) {
         console.log("0");
-        x.writeSync(Gpio.LOW);
-        sleep.usleep(this.DELAYSHORT);
-        x.writeSync(Gpio.HIGH);
-        sleep.usleep(this.DELAYLONG);
+        x.writeSync(rpio.LOW);
+        rpio.usleep(this.DELAYSHORT);
+        x.writeSync(rpio.HIGH);
+        rpio.usleep(this.DELAYLONG);
     }
 
     this.ONE = function (x) {
         console.log("1");
-        x.writeSync(Gpio.LOW);
-        sleep.usleep(this.DELAYLONG);
-        x.writeSync(Gpio.HIGH);
-        sleep.usleep(this.DELAYSHORT);
+        x.writeSync(rpio.LOW);
+        rpio.usleep(this.DELAYLONG);
+        x.writeSync(rpio.HIGH);
+        rpio.usleep(this.DELAYSHORT);
+    }
+
+    this.write(pin, value) {
+        rpio.Write(pin, value);
     }
 
     this.set_color = function(bulb, intensity, color) {
-        let r = color & 0x0F;
-        let g = (color >> 4) & 0x0F;
-        let b = (color >> 8) & 0x0F;
+        //let r = color & 0x0F;
+        //let g = (color >> 4) & 0x0F;
+        //let b = (color >> 8) & 0x0F;
+        let r = 0xF;
+        let g = 0;
+        let b = 0;
+        let intensity = 0xcc;
 
         if (intensity > this.MAX_INTENSITY) {
             intensity = this.MAX_INTENSITY;
         }
-        sleep.usleep(this.DELAYSHORT);
+
+        this.write(this.pin, rpio.HIGH);
+        rpio.usleep(this.DELAYSHORT);
 
         //LED Address
         if (bulb & 0x20) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
@@ -84,8 +101,8 @@ function G35String(_pin, _light_count) {
         if (r & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
         if (r & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
 
-        this.pin.writeSync(Gpio.LOW);
-        sleep.usleep(this.DELAYEND);
+        this.write(this.pin, rpio.LOW);
+        rpio.usleep(this.DELAYEND);
     }
 }
 
