@@ -22,19 +22,17 @@ function G35String(_pin, _light_count) {
     this.COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
 
     this.ZERO = function(x) {
-        console.log("0");
-        x.writeSync(rpio.LOW);
-        rpio.usleep(this.DELAYSHORT);
-        x.writeSync(rpio.HIGH);
-        rpio.usleep(this.DELAYLONG);
+        var waveform = [];
+        waveform.push({ gpioOn:0, gpioOff: (1 << x), usDelay:this.DELAYSHORT});
+        waveform.push({ gpioOn:(1 << x), gpioOff: 0, usDelay:this.DELAYLONG});
+        return waveform;
     }
 
     this.ONE = function (x) {
-        console.log("1");
-        x.writeSync(rpio.LOW);
-        rpio.usleep(this.DELAYLONG);
-        x.writeSync(rpio.HIGH);
-        rpio.usleep(this.DELAYSHORT);
+        var waveform = [];
+        waveform.push({ gpioOn:0, gpioOff: (1 << x), usDelay:this.DELAYLONG});
+        waveform.push({ gpioOn:(1 << x), gpioOff: 0, usDelay:this.DELAYSHORT});
+        return waveform;
     }
 
     this.write = function(pin, value) {
@@ -57,46 +55,56 @@ function G35String(_pin, _light_count) {
         var waveform = [];
 
         waveform.push({ gpioOn:(1 << this.pin), gpioOff: 0, usDelay:this.DELAYSHORT});
-        waveform.push({ gpioOn:(1 << this.pin), gpioOff: 0, usDelay:this.DELAYSHORT});
+        waveform.push({ gpioOn:0, gpioOff: (1 << this.pin), usDelay:1});
 
         //LED Address
-        if (bulb & 0x20) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (bulb & 0x10) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (bulb & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (bulb & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (bulb & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (bulb & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (bulb & 0x20) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (bulb & 0x10) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (bulb & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (bulb & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (bulb & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (bulb & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
 
         // Brightness
-        if (intensity & 0x80) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (intensity & 0x40) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (intensity & 0x20) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (intensity & 0x10) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (intensity & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (intensity & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (intensity & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (intensity & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x80) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x40) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x20) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x10) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
 
         //Blue
-        if (b & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (b & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (b & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (b & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (b & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (b & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (b & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (b & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
 
         //Green
-        if (g & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (g & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (g & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (g & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (g & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (g & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (g & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (g & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
 
         //Red
-        if (r & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (r & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (r & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
-        if (r & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (r & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (r & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (r & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (r & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
 
-        this.write(this.pin, rpio.LOW);
-        rpio.usleep(this.DELAYEND);
+        waveform.push({ gpioOn:0, gpioOff: (1 << this.pin), usDelay:this.DELAYEND});
+
+        Gpio.waveClear();
+        Gpio.waveAddGeneric(waveform.length, waveform);
+        var waveId = Gpio.waveCreate();
+        if (waveId >= 0) {
+            console.log("Wave ID: ", waveId);
+            Gpio.waveTxSend(waveId, Gpio.WAVE_MODE_ONE_SHOT);
+        }
+
+        while (Gpio.waveTxBusy()) {}
+        Gpio.waveDelete(waveId();
     }
 }
 
