@@ -1,18 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const sleep = require('sleep');
-const rpio = require('rpio');
-const proc = require('process');
+const Gpio = require('pigpio').Gpio;
 
 /* GET home page. */
 router.post('/', (req, res, next) => {
     //console.log("Got frame data", req.body);
-    const start = process.hrtime.bigint();
-    rpio.usleep(100);
-    const end = process.hrtime.bigint();
-    rpio.usleep(100);
-    const end2 = process.hrtime.bigint();
-    console.log("Delay1: ", end-start, "Delay2: ", end2-end);
     let g = new G35String(13, 36);
     g.set_color(0, 0xcc, g.COLOR_RED);
     res.send(200);
@@ -23,7 +15,7 @@ function G35String(_pin, _light_count) {
     this.DELAYSHORT = 7;
     this.DELAYLONG = 17;
     this.DELAYEND = 40;
-    this.pin = _pin;
+    this.pin = new Gpio(_pin, {mode: Gpio.OUTPUT});
     this.light_count = _light_count;
     rpio.open(_pin, 'rpio.OUTPUT', rpio.LOW);
 
@@ -62,8 +54,10 @@ function G35String(_pin, _light_count) {
             intensity = this.MAX_INTENSITY;
         }
 
-        this.write(this.pin, rpio.HIGH);
-        rpio.usleep(this.DELAYSHORT);
+        var waveform = [];
+
+        waveform.push({ gpioOn:(1 << this.pin), gpioOff: 0, usDelay:this.DELAYSHORT});
+        waveform.push({ gpioOn:(1 << this.pin), gpioOff: 0, usDelay:this.DELAYSHORT});
 
         //LED Address
         if (bulb & 0x20) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
