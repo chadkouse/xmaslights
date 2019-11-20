@@ -7,7 +7,7 @@ const pin13 = new Gpio(13, 'out');
 /* GET home page. */
 router.post('/', (req, res, next) => {
     console.log("Got frame data", req.body);
-    let g = new G35String(13, 36);
+    let g = new G35String(pin13, 36);
     g.set_color(0, 0xcc, g.COLOR_RED);
     res.send(200);
 });
