@@ -1,4 +1,3 @@
-"use strict";
 var express = require('express');
 var router = express.Router();
 const sleep = require('sleep');
@@ -8,12 +7,12 @@ const pin13 = new Gpio(13, 'out');
 /* GET home page. */
 router.post('/', (req, res, next) => {
     console.log("Got frame data", req.body);
-    let g = new g35String(13, 36);
+    let g = new G35String(13, 36);
     g.set_color(0, 0xcc, g.COLOR_RED);
     res.send(200);
 });
 
-class g35String {
+class G35String {
     MAX_INTENSITY = 0xcc;
     DELAYSHORT = 7;
     DELAYLONG = 17;
