@@ -55,45 +55,45 @@ function G35String(_pin, _light_count) {
 
         var waveform = [];
 
-        waveform.push({ gpioOn:(1 << this.pin), gpioOff: 0, usDelay:this.DELAYSHORT});
+        waveform.push({ gpioOn:(1 << this.pinNumber), gpioOff: 0, usDelay:this.DELAYSHORT});
 
         //LED Address
-        if (bulb & 0x20) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (bulb & 0x10) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (bulb & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (bulb & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (bulb & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (bulb & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (bulb & 0x20) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (bulb & 0x10) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (bulb & 0x08) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (bulb & 0x04) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (bulb & 0x02) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (bulb & 0x01) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
 
         // Brightness
-        if (intensity & 0x80) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (intensity & 0x40) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (intensity & 0x20) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (intensity & 0x10) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (intensity & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (intensity & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (intensity & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (intensity & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (intensity & 0x80) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (intensity & 0x40) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (intensity & 0x20) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (intensity & 0x10) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (intensity & 0x08) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (intensity & 0x04) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (intensity & 0x02) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (intensity & 0x01) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
 
         //Blue
-        if (b & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (b & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (b & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (b & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (b & 0x08) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (b & 0x04) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (b & 0x02) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (b & 0x01) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
 
         //Green
-        if (g & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (g & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (g & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (g & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (g & 0x08) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (g & 0x04) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (g & 0x02) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (g & 0x01) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
 
         //Red
-        if (r & 0x08) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (r & 0x04) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (r & 0x02) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
-        if (r & 0x01) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
+        if (r & 0x08) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (r & 0x04) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (r & 0x02) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
+        if (r & 0x01) { waveform = waveform.concat(this.ONE(this.pinNumber)); } else { waveform = waveform.concat(this.ZERO(this.pinNumber)); }
 
-        waveform.push({ gpioOn:0, gpioOff: (1 << this.pin), usDelay:this.DELAYEND});
+        waveform.push({ gpioOn:0, gpioOff: (1 << this.pinNumber), usDelay:this.DELAYEND});
 
 	    console.log(waveform);
 
