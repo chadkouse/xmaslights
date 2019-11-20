@@ -45,7 +45,7 @@ function G35String(_pin, _light_count) {
         rpio.usleep(this.DELAYSHORT);
     }
 
-    this.write(pin, value) {
+    this.write = function(pin, value) {
         rpio.Write(pin, value);
     }
 
