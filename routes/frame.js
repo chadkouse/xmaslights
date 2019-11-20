@@ -12,31 +12,33 @@ router.post('/', (req, res, next) => {
     res.send(200);
 });
 
-let g35String = function(_pin,_light_count) {
-    let pin = _pin;
-    let light_count = _light_count;
-    let MAX_INTENSITY = 0xcc;
-    let DELAYSHORT = 7;
-    let DELAYLONG = 17;
-    let DELAYEND = 40;
+class g35String {
+    this.MAX_INTENSITY = 0xcc;
+    this.DELAYSHORT = 7;
+    this.DELAYLONG = 17;
+    this.DELAYEND = 40;
+    constructor(_pin,_light_count) {
+        this.pin = _pin;
+        this.light_count = _light_count;
+    }
 
-    const COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
+    this.COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
 
-    const ZERO = (x) => {
+    this.ZERO = (x) => {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYSHORT);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYLONG);
     };
 
-    const ONE = (x) => {
+    this.ONE = (x) => {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYLONG);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYSHORT);
     };
 
-    const set_color = (bulb, intensity, color) => {
+    this.set_color = (bulb, intensity, color) => {
         let r = color & 0x0F;
         let g = (color >> 4) & 0x0F;
         let b = (color >> 8) & 0x0F;
