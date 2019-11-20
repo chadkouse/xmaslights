@@ -104,7 +104,7 @@ function G35String(_pin, _light_count) {
         }
 
         while (Gpio.waveTxBusy()) {}
-        Gpio.waveDelete(waveId();
+        Gpio.waveDelete(waveId());
     }
 }
 
