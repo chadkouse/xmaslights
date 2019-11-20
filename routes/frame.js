@@ -13,30 +13,30 @@ router.post('/', (req, res, next) => {
 });
 
 let g35String = function(pin, light_count) {
-    this.pin : pin;
-    this.light_count: light_count;
-    this.MAX_INTENSITY: 0xcc;
-    this.DELAYSHORT = 7;
-    this.DELAYLONG = 17;
-    this.DELAYEND = 40;
+    let pin = pin;
+    let light_count = light_count;
+    let MAX_INTENSITY = 0xcc;
+    let DELAYSHORT = 7;
+    let DELAYLONG = 17;
+    let DELAYEND = 40;
 
-    COLOR_RED: let r = ((0xF) + ((0) << 4) + ((0) << 8));
+    const COLOR_RED =  let r = ((0xF) + ((0) << 4) + ((0) << 8));
 
-    ZERO: (x) => {
+    const ZERO = (x) => {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYSHORT);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYLONG);
     };
 
-    ONE: (x) => {
+    const ONE = (x) => {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYLONG);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYSHORT);
     };
 
-    set_color: (bulb, intensity, color) => {
+    const set_color = (bulb, intensity, color) => {
         let r = color & 0x0F;
         let g = (color >> 4) & 0x0F;
         let b = (color >> 8) & 0x0F;
