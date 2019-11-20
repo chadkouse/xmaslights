@@ -12,9 +12,9 @@ router.post('/', (req, res, next) => {
     res.send(200);
 });
 
-let g35String = function(pin, light_count) {
-    let pin = pin;
-    let light_count = light_count;
+let g35String = function(_pin,_light_count) {
+    let pin = _pin;
+    let light_count = _light_count;
     let MAX_INTENSITY = 0xcc;
     let DELAYSHORT = 7;
     let DELAYLONG = 17;
