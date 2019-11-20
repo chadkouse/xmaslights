@@ -11,7 +11,7 @@ router.post('/', (req, res, next) => {
     rpio.usleep(100);
     const end = process.hrtime.bigint();
     rpio.usleep(100);
-    const.end2 = process.hrtime.bigint();
+    const end2 = process.hrtime.bigint();
     console.log("Delay1: ", end-start, "Delay2: ", end2-end);
     let g = new G35String(13, 36);
     g.set_color(0, 0xcc, g.COLOR_RED);
