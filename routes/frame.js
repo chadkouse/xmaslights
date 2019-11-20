@@ -20,7 +20,7 @@ let g35String = function(pin, light_count) {
     let DELAYLONG = 17;
     let DELAYEND = 40;
 
-    const COLOR_RED =  let r = ((0xF) + ((0) << 4) + ((0) << 8));
+    const COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
 
     const ZERO = (x) => {
         x.writeSync(Gpio.LOW);
