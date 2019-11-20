@@ -45,7 +45,6 @@ function G35String(_pin, _light_count) {
         let r = 0xF;
         let g = 0;
         let b = 0;
-        let intensity = 0xcc;
 
         if (intensity > this.MAX_INTENSITY) {
             intensity = this.MAX_INTENSITY;
