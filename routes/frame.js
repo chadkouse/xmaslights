@@ -23,6 +23,7 @@ function G35String(_pin, _light_count) {
     this.COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
 
     this.ZERO = function(x) {
+        console.log("0");
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYSHORT);
         x.writeSync(Gpio.HIGH);
@@ -30,6 +31,7 @@ function G35String(_pin, _light_count) {
     }
 
     this.ONE = function (x) {
+        console.log("1");
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYLONG);
         x.writeSync(Gpio.HIGH);
