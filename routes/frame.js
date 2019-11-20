@@ -21,23 +21,22 @@ function G35String(_pin, _light_count) {
     this.light_count = _light_count;
 
     this.COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
-}
 
-    G35String.prototype.ZERO = function(x) {
+    this.ZERO = function(x) {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYSHORT);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYLONG);
     }
 
-    G35String.prototype.ONE = function (x) {
+    this.ONE = function (x) {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYLONG);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYSHORT);
     }
 
-    G35String.prototype.set_color = function(bulb, intensity, color) {
+    this.set_color = function(bulb, intensity, color) {
         let r = color & 0x0F;
         let g = (color >> 4) & 0x0F;
         let b = (color >> 8) & 0x0F;
@@ -86,5 +85,6 @@ function G35String(_pin, _light_count) {
         this.pin.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYEND);
     }
+}
 
 module.exports = router;
