@@ -1,0 +1,286 @@
+extends layout
+
+block headcontent
+    script(src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous")
+    script(type="text/javascript" src="javascripts/LightController.js")
+    script.
+        const rainbow = [
+            "#ff0000",
+            "#ff9100",
+            "#ffff00",
+            "#00ff00",
+            "#0000ff",
+            "#fd00ff",
+            "#9000ff"
+        ];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById("canvas");
+
+            const controller = new LightController(canvas);
+            var idx = 0;
+            var frames = [];
+            const myProgram = new LightProgram(frames, 300);
+            controller.program = myProgram;
+            controller.runProgram();
+
+            $('.update-delay').click(() => {
+                let newDelay = $('#frameDelay').val();
+                controller.program.delay = newDelay;
+            });
+
+            $('.load-program').click(() => {
+                let data = $('#json-data').val();
+                controller.loadProgram(data);
+            });
+            $('.get-program').click(() => {
+                let data = controller.getProgram();
+                $('#json-data').val(data);
+            });
+            $('.add-light-string').click(() => {
+                controller.addLightString();
+            });
+            $('.delete-frame').click(() => {
+                copiedFrame = controller.deleteFrame();
+            });
+            $('.copy-frame').click(() => {
+                copiedFrame = controller.getFrameData();
+            });
+            $('.paste-frame').click(() => {
+                if (!copiedFrame) return;
+                controller.pasteFrameData(copiedFrame);
+            });
+            $('.scroll-frame').click(() => {
+                controller.scrollFrame();
+            });
+            $('.scroll-frames').click(() => {
+                controller.scrollFrames();
+            });
+            $('.lock-positions').click(() => {
+                controller.positionLocked = !controller.positionLocked;
+                $('.lock-positions').text(controller.positionLocked ? 'Unlock Positions' : 'Lock Positions');
+            });
+
+            $('.toggle-frame-play').click(() => {
+                controller.play = !controller.play;
+                $('.toggle-frame-play').text(controller.play ? "||" : "Go");
+            });
+
+            $('.move-frame').click( (e) => {
+                let i = $(e.currentTarget).data('index');
+                controller.moveProgramFrameNumber(i);
+            });
+            $('.insert-frame').click( (e) => {
+                controller.insertFrame();
+            });
+
+            $('.clear-selected-bulb').click( () => {
+                controller.selectedItem = {};
+            });
+
+            $('.toggle-show-bulb-text').click( () => {
+                controller.showBulbText = !controller.showBulbText;
+            });
+
+            $('.toggle-show-grid').click( () => {
+                controller.showGrid = !controller.showGrid;
+            });
+
+
+            let picker = document.getElementById("colorPicker");
+            $('body').on('mouseenter', '.swatch', (e) => {
+                let color = e.currentTarget.style.backgroundColor;
+                m = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+                if(m) {
+                    let red = Math.floor(m[1]/16);
+                    let green = Math.floor(m[2]/16);
+                    let blue = Math.floor(m[3]/16);
+                    //console.log(red, green, blue);
+                    controller.updateSelectedBulbColor({red: red, green: green, blue: blue});
+                }
+            });
+            $('body').on('click', '.swatch', (e) => {
+                controller.selectedItem = {};
+            });
+
+            let bulb = new Bulb(0, 0, 0);
+                for (let green = 0; green < 16; green++) {
+                    let blue = green;
+                    let red = 16;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let red = 16; red > 0; red--) {
+                    let blue = red;
+                    let green = 16;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let blue = 0; blue < 16; blue++) {
+                    let red = blue;
+                    let green = 16;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let green = 16; green > 0; green--) {
+                    let red = green;
+                    let blue = 16;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let red = 0; red < 16; red++) {
+                    let green = red;
+                    let blue = 16;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let blue = 16; blue > 0; blue--) {
+                    let green = blue;
+                    let red = 16;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+            for (let dim = 0; dim < 16; dim++) {
+                for (let green = 0; green < 16; green++) {
+                    let blue = 0;
+                    let red = 16-dim;
+                    bulb.red = red;
+                    bulb.green = green-dim;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let red = 15; red >= 0; red--) {
+                    let blue = 0;
+                    let green = 16-dim;
+                    bulb.red = red-dim;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let blue = 0; blue < 16; blue++) {
+                    let red = 0;
+                    let green = 16-dim;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue-dim;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let green = 15; green >= 0; green--) {
+                    let red = 0;
+                    let blue = 16-dim;
+                    bulb.red = red;
+                    bulb.green = green-dim;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let red = 0; red < 16; red++) {
+                    let green = 0;
+                    let blue = 16-dim;
+                    bulb.red = red-dim;
+                    bulb.green = green;
+                    bulb.blue = blue;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+                for (let blue = 15; blue >= 0; blue--) {
+                    let green = 0;
+                    let red = 16-dim;
+                    bulb.red = red;
+                    bulb.green = green;
+                    bulb.blue = blue-dim;
+                    let color = bulb.getHexColor();
+                    let d = document.createElement("div");
+                    d.className = 'swatch';
+                    d.style.backgroundColor = color;
+                    picker.appendChild(d);
+                }
+            }
+        });
+
+block content
+    canvas#canvas(width="1000", height="500")
+    br
+    | Current Frame:
+    span.frameNumber
+    span.selectedBulbInfo
+    br
+    | Frame Delay:
+    input#frameDelay(type='text')
+    button.update-delay Set
+    br
+    button.add-light-string Add new light string
+    br
+    button.move-frame(data-index="-1") &lt;
+    button.toggle-frame-play ||
+    button.move-frame(data-index="1") &gt;
+    button.insert-frame +
+    button.clear-selected-bulb &times;
+    button.toggle-show-bulb-text Bulb text
+    button.toggle-show-grid Grid
+    button.delete-frame Delete Frame
+    button.copy-frame Copy Frame
+    button.paste-frame Paste Frame
+    button.scroll-frame Scroll Frame
+    button.scroll-frames Scroll ALL Frames
+    button.lock-positions Lock Positions
+    #colorPicker
+    textarea#json-data(style='width:600px;height:200px;')
+    button.load-program Load Program
+    button.get-program Get Program
