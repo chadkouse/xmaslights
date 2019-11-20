@@ -17,7 +17,6 @@ function G35String(_pin, _light_count) {
     this.DELAYEND = 40;
     this.pin = new Gpio(_pin, {mode: Gpio.OUTPUT});
     this.light_count = _light_count;
-    rpio.open(_pin, 'rpio.OUTPUT', rpio.LOW);
 
     this.COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
 
