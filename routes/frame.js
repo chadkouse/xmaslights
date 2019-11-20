@@ -6,15 +6,18 @@ const Gpio = require('pigpio').Gpio;
 router.post('/', (req, res, next) => {
     //console.log("Got frame data", req.body);
     let g = new G35String(13, 36);
-    g.set_color(0, 0xcc, g.COLOR_RED);
+	for (let i = 0; i < 36; i++) {
+    g.set_color(i, 0xcc, g.COLOR_RED);
+	}
     res.send(200);
 });
 
 function G35String(_pin, _light_count) {
     this.MAX_INTENSITY = 0xcc;
-    this.DELAYSHORT = 7;
-    this.DELAYLONG = 17;
-    this.DELAYEND = 40;
+    this.DELAYSHORT = 10;
+    this.DELAYLONG = 20;
+    this.DELAYEND = 30;
+	this.pinNumber = _pin;
     this.pin = new Gpio(_pin, {mode: Gpio.OUTPUT});
     this.light_count = _light_count;
 
@@ -43,8 +46,8 @@ function G35String(_pin, _light_count) {
         //let g = (color >> 4) & 0x0F;
         //let b = (color >> 8) & 0x0F;
         let r = 0xF;
-        let g = 0;
-        let b = 0;
+        let g = 0xF;
+        let b = 0xF;
 
         if (intensity > this.MAX_INTENSITY) {
             intensity = this.MAX_INTENSITY;
@@ -53,7 +56,6 @@ function G35String(_pin, _light_count) {
         var waveform = [];
 
         waveform.push({ gpioOn:(1 << this.pin), gpioOff: 0, usDelay:this.DELAYSHORT});
-        waveform.push({ gpioOn:0, gpioOff: (1 << this.pin), usDelay:1});
 
         //LED Address
         if (bulb & 0x20) { waveform = waveform.concat(this.ONE(this.pin)); } else { waveform = waveform.concat(this.ZERO(this.pin)); }
@@ -93,16 +95,18 @@ function G35String(_pin, _light_count) {
 
         waveform.push({ gpioOn:0, gpioOff: (1 << this.pin), usDelay:this.DELAYEND});
 
-        Gpio.waveClear();
-        Gpio.waveAddGeneric(waveform.length, waveform);
-        var waveId = Gpio.waveCreate();
+	    console.log(waveform);
+
+        this.pin.waveClear();
+        this.pin.waveAddGeneric(waveform);
+        var waveId = this.pin.waveCreate();
         if (waveId >= 0) {
             console.log("Wave ID: ", waveId);
-            Gpio.waveTxSend(waveId, Gpio.WAVE_MODE_ONE_SHOT);
+            console.log(this.pin.waveTxSend(waveId, Gpio.WAVE_MODE_ONE_SHOT));
         }
 
-        while (Gpio.waveTxBusy()) {}
-        Gpio.waveDelete(waveId());
+        while (this.pin.waveTxBusy()) {console.log("Busy");}
+        this.pin.waveDelete(waveId);
     }
 }
 
