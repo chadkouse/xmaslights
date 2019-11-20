@@ -47,40 +47,40 @@ function G35String(_pin, _light_count) {
         sleep.usleep(this.DELAYSHORT);
 
         //LED Address
-        if (bulb & 0x20) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (bulb & 0x10) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (bulb & 0x08) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (bulb & 0x04) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (bulb & 0x02) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (bulb & 0x01) { this.ONE(this.pin); } else { ZERO(this.pin); }
+        if (bulb & 0x20) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (bulb & 0x10) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (bulb & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (bulb & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (bulb & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (bulb & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
 
         // Brightness
-        if (intensity & 0x80) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (intensity & 0x40) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (intensity & 0x20) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (intensity & 0x10) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (intensity & 0x08) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (intensity & 0x04) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (intensity & 0x02) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (intensity & 0x01) { this.ONE(this.pin); } else { ZERO(this.pin); }
+        if (intensity & 0x80) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x40) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x20) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x10) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (intensity & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
 
         //Blue
-        if (b & 0x08) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (b & 0x04) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (b & 0x02) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (b & 0x01) { this.ONE(this.pin); } else { ZERO(this.pin); }
+        if (b & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (b & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (b & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (b & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
 
         //Green
-        if (g & 0x08) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (g & 0x04) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (g & 0x02) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (g & 0x01) { this.ONE(this.pin); } else { ZERO(this.pin); }
+        if (g & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (g & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (g & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (g & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
 
         //Red
-        if (r & 0x08) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (r & 0x04) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (r & 0x02) { this.ONE(this.pin); } else { ZERO(this.pin); }
-        if (r & 0x01) { this.ONE(this.pin); } else { ZERO(this.pin); }
+        if (r & 0x08) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (r & 0x04) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (r & 0x02) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
+        if (r & 0x01) { this.ONE(this.pin); } else { this.ZERO(this.pin); }
 
         this.pin.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYEND);
