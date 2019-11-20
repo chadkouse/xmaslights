@@ -12,33 +12,32 @@ router.post('/', (req, res, next) => {
     res.send(200);
 });
 
-class G35String {
-    MAX_INTENSITY = 0xcc;
-    DELAYSHORT = 7;
-    DELAYLONG = 17;
-    DELAYEND = 40;
-    constructor(_pin,_light_count) {
-        this.pin = _pin;
-        this.light_count = _light_count;
-    }
+function G35String(_pin, _light_count) {
+    this.MAX_INTENSITY = 0xcc;
+    this.DELAYSHORT = 7;
+    this.DELAYLONG = 17;
+    this.DELAYEND = 40;
+    this.pin = _pin;
+    this.light_count = _light_count;
 
-    COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
+    this.COLOR_RED = ((0xF) + ((0) << 4) + ((0) << 8));
+}
 
-    ZERO(x) {
+    G35String.prototype.ZERO = function(x) {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYSHORT);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYLONG);
     }
 
-    ONE(x) {
+    G35String.prototype.ONE = function (x) {
         x.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYLONG);
         x.writeSync(Gpio.HIGH);
         sleep.usleep(this.DELAYSHORT);
     }
 
-    set_color(bulb, intensity, color) {
+    G35String.prototype.set_color = function(bulb, intensity, color) {
         let r = color & 0x0F;
         let g = (color >> 4) & 0x0F;
         let b = (color >> 8) & 0x0F;
@@ -87,6 +86,5 @@ class G35String {
         this.pin.writeSync(Gpio.LOW);
         sleep.usleep(this.DELAYEND);
     }
-}
 
 module.exports = router;
