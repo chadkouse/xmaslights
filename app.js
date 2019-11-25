@@ -3,6 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+ws281x = require('rpi-ws281x-native');
+
+// ---- trap the SIGINT and reset before exit
+process.on('SIGINT', function () {
+  ws281x.reset();
+  process.nextTick(function () { process.exit(0); });
+});
+ws281x.init(200);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
