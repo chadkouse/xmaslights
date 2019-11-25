@@ -226,14 +226,13 @@ class LightController {
     addLightString() {
         let lightCount = prompt("Number of lights", "50");
         let pin = prompt("GPIO pin", "13");
-        if (lightCount > 0 && lightCount <= 50) {
+        if (lightCount > 0 && lightCount <= 600) {
             for (var s = 0; s < 1; s++) {
                 //add to all frames
                 if (this.program.frames.length <= 0) {
                     let lights = [];
                     for (var i = 0; i < lightCount; i++) {
-
-                        const b = new Bulb(i, i*18, 0);
+                        const b = new Bulb(i, ((i%50)*18), (Math.floor(i/50)*18));
                         b.setHexColor('#000000');
                         lights.push(b);
                     }
@@ -321,7 +320,13 @@ class LightController {
     }
     postFrameData() {
         const data = this.program.getFrame(this.frameNumber);
-        $.post('/frame', data, () => {
+	$.ajax({
+		type: "POST",
+		contentType: "application/json",
+		url: "/frame",
+		data: JSON.stringify(data),
+		dataType: "json"
+	}, () => {
             console.log("posted it");
         });
     }
@@ -403,7 +408,7 @@ class LightController {
      //       console.log(this.selectedItem);
             if (this.selectedItem && this.selectedItem.element) {
                 $('.selectedBulbInfo').text(" Selected Bulb: String " + this.selectedItem.element.stringIdx + " Buld Addr: " + this.selectedItem.element.bulb.address);
-                setTimeout(runLoop, 0);
+                setTimeout(runLoop, 100);
             } else {
                 $('.selectedBulbInfo').text("");
                 setTimeout(runLoop, this.program.delay);
@@ -483,6 +488,7 @@ class LightProgram {
         if (reverse) {
             this.frames.reverse();
         }
+	    if (delay < 100) { delay = 100; }
         this.delay = delay;
         this.reverse = reverse;
     }
