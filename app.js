@@ -10,7 +10,7 @@ process.on('SIGINT', function () {
   ws281x.reset();
   process.nextTick(function () { process.exit(0); });
 });
-ws281x.init(200);
+ws281x.init(475);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
