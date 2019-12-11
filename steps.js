@@ -34,8 +34,8 @@ setInterval(() => {
 
 function fadeToBlack(ledNo, fadeValue) {
 	let oldColor = pixelData[ledNo];
-	let r = (oldColor & 0x00ff0000) >> 16;
-	let g = (oldColor & 0x0000ff00) >> 8;
+	let g = (oldColor & 0x00ff0000) >> 16;
+	let r = (oldColor & 0x0000ff00) >> 8;
 	let b = (oldColor & 0x000000ff);
 
 	r=(r<=10)? 0 : Math.floor(r-(r*fadeValue/256));
@@ -49,8 +49,8 @@ function fadeColorToBlack(color, fadeValue) {
     if (fadeValue <= 0) {
         return color;
     }
-	let r = (color & 0x00ff0000) >> 16;
-	let g = (color & 0x0000ff00) >> 8;
+	let g = (color & 0x00ff0000) >> 16;
+	let r = (color & 0x0000ff00) >> 8;
 	let b = (color & 0x000000ff);
 
 	r=(r<=10)? 0 : Math.floor(r-(r*fadeValue/256));
@@ -73,7 +73,7 @@ function steps(color, stepLength, spacing, speedDelay, loopCallback) {
     var colorStep = 0;
     var leftToSkip = spacing;
     var currentSteps = 0;
-    var fadeValue = 10;
+    var fadeValue = 20;
 
 	for (var i = 0; i <= end; i++) {
             if (leftToSkip > 0) {
@@ -84,14 +84,14 @@ function steps(color, stepLength, spacing, speedDelay, loopCallback) {
                 leftToSkip = spacing;
             }
             var rgbToUse = color[colorStep];
-            var colorToUse = fadeColorToBlack(rgb2Int(rgbToUse.red, rgbToUse.green, rgbToUse.blue), currentStep*fadeValue);
+            var colorToUse = fadeColorToBlack(rgb2Int(rgbToUse.red, rgbToUse.green, rgbToUse.blue), currentSteps*fadeValue);
             pixelData[i] = colorToUse;
             
             currentSteps++;
             if (currentSteps > stepLength) {
                 currentSteps = 0;
                 colorStep++;
-                if (colorStep > color.length) {
+                if (colorStep >= color.length) {
                     colorStep = 0;
                 }
             }
