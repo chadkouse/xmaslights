@@ -13,6 +13,8 @@ var start = 0;
 var end = 473;
 var loopCount = 0;
 var maxLoopCount = 5;
+var offset = 0;
+var color = true;
 
 let runEffect = () => {
 	if (loopCount >= maxLoopCount) {
@@ -24,7 +26,14 @@ let runEffect = () => {
 let runEffect2 = () => {
 	loopCount++;
 	console.log("Running effect");
-	bomb(0, 255, 0, 255, 0, 0, 3, loopCount < maxLoopCount ? runEffect : runMeteorRain);
+	bomb(0, 255, 0, 255, 0, 0, 3, () => {
+		if (loopCount < maxLoopCount) { setTimeout(runEffect, 1); }
+		else {
+			loopCount = 0;
+			maxLoopCount = 300;
+			setTimeout(() => {setAll(0,0,0); runTwinkle();}, 1000);
+		}
+	});
 }
 
 var segments = [
@@ -47,7 +56,42 @@ let runMeteorRain = () => {
 	}
 	console.log("Running meteorRain");
 	loopCount++;
-	meteorRain(segments, 0, 0, 255, 10, 64, true, 20, loopCount < maxLoopCount ? runMeteorRain : runEffect);
+	meteorRain(segments, 0, 0, 255, 10, 64, true, 20, () => {
+		if (loopCount < maxLoopCount) { setTimeout(runMeteorRain, 1); }
+		else {
+			loopCount = 0;
+			maxLoopCount = 5;
+			setTimeout(runEffect, 1);
+		}
+	});
+}
+
+let runTwinkle = () => {
+	console.log("Running twinkle");
+	offset = offset > 0 ? 0 : 1;
+	loopCount++;
+	twinkle(0, 0, 50, 255, 255, 255, 50, () => {
+		if (loopCount < maxLoopCount) { setTimeout(runTwinkle, 1); }
+		else { 
+			loopCount = 0;
+			maxLoopCount = 100;
+			setTimeout(runMarquee, 1);
+		}
+	});
+	
+}
+let runMarquee = () => {
+	console.log("Running marquee");
+	offset = offset > 0 ? 0 : 1;
+	loopCount++;
+	marquee(255, 255, 255, 0, 0, 255, 125, () => {
+		if (loopCount < maxLoopCount) { setTimeout(runMarquee, 1); }
+		else { 
+			loopCount = 0;
+			maxLoopCount = 5;
+			setTimeout(runMeteorRain, 1);
+		}
+	});
 }
 /*
 let runMeteorRain2 = () => {
@@ -231,4 +275,44 @@ function bomb(red, green, blue, red2, green2, blue2, speedDelay, loopCallback) {
 
 function rgb2Int(r, g, b) {
   return ((g & 0xff) << 16) + ((r & 0xff) << 8) + (b & 0xff);
+}
+
+function fadeToBase(minRed, minGreen, minBlue, ledNo, fadeValue) {
+	let oldColor = pixelData[ledNo];
+	let r = (oldColor & 0x00ff0000) >> 16;
+	let g = (oldColor & 0x0000ff00) >> 8;
+	let b = (oldColor & 0x000000ff);
+
+	r=(r<=minRed+10)? minRed : Math.floor(r-(r*fadeValue/256));
+	g=(g<=minGreen+10)? minGreen : Math.floor(g-(g*fadeValue/256));
+	b=(b<=minBlue+10)? minBlue : Math.floor(b-(b*fadeValue/256));
+
+	pixelData[ledNo] = rgb2Int(r, g, b);
+}
+
+function twinkle(red, green, blue, red2, green2, blue2, speedDelay, loopCallback) {
+	var i = 0;
+
+	for (var i = 0; i <= end; i++) {
+		fadeToBase(red, green, blue, i, 50);
+		if (Math.random() > 0.998) {
+			pixelData[i] = rgb2Int(red2, green2, blue2);
+		}	
+	}
+	setTimeout(loopCallback, speedDelay);
+}
+
+function marquee(red, green, blue, red2, green2, blue2, speedDelay, loopCallback) {
+	//setAll(red, green, blue);
+	var i = 0;
+
+	for (var i = 0; i <= end; i++) {
+		if ((i+offset) % 2 == 0) {
+			pixelData[i] = color ? rgb2Int(red, green, blue) : rgb2Int(red2, green2, blue2);
+			color = !color;
+		} else {
+			pixelData[i] = rgb2Int(0, 0, 0);
+		}
+	}
+	setTimeout(loopCallback, speedDelay);
 }
